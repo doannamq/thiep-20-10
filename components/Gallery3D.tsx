@@ -17,10 +17,20 @@ const Floating = memo(function Floating({ p, s, i, phase, hidden, onPick, reg }:
   return (
     <button ref={(el) => reg(p.id, el)} className="photo" aria-label={`Xem ảnh: ${p.caption}`}
       style={{ width: s.w, height: s.h, marginLeft: -s.w / 2, marginTop: -s.h / 2, transform: t, opacity: shown && !hidden ? 1 : 0, transitionDelay: `${delay}ms`, pointerEvents: phase === 'gallery' ? 'auto' : 'none' }}
-      onClick={(e) => onPick(p.id, e.currentTarget.getBoundingClientRect())}>
+      onClick={(e) => {
+        e.stopPropagation();
+
+        const rect = e.currentTarget.getBoundingClientRect();
+
+        console.log('Ảnh được click:', p.id, p.src);
+        console.log('Phase:', phase);
+        console.log('Kích thước vùng click:', rect.width, rect.height);
+
+        onPick(p.id, rect);
+      }}>
       <span className="bob" style={{ animationDuration: `${s.dur}s`, animationDelay: `${s.del}s` }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={broken ? '/photos/p1.svg' : p.src} alt={p.alt} draggable={false} onError={() => setBroken(true)} />
+        <img src={broken ? '/photos/p1.jpg' : p.src} alt={p.alt} draggable={false} onError={() => setBroken(true)} />
       </span>
     </button>
   );
